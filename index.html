@@ -600,3 +600,568 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
+/* Progress dots */
+.pdots{position:absolute;top:58px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:30;pointer-events:none}
+.pd{width:7px;height:7px;border-radius:50%;background:rgba(255,248,235,.38);transition:background .4s}
+.pd.on{background:rgba(255,248,235,.94)}
+
+/* Mood bar */
+.moodwrap{position:absolute;left:10px;top:50%;transform:translateY(-50%);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.moodbg{width:11px;height:68px;background:rgba(255,248,235,.78);border-radius:6px;overflow:hidden;display:flex;flex-direction:column-reverse}
+.moodfill{background:#E87860;border-radius:6px;transition:height 1.1s ease}
+
+/* Walk hint */
+.walkhint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(255,248,235,.86);border-radius:20px;padding:8px 20px;font-size:13px;color:#8A6040;white-space:nowrap;z-index:30;pointer-events:none;opacity:0;transition:opacity .5s}
+.walkhint.show{opacity:1}
+
+/* Story overlays */
+.bubble{position:absolute;bottom:132px;left:14px;right:14px;background:rgba(255,248,235,.97);border-radius:22px;padding:16px 18px;font-size:15px;line-height:1.7;color:#3A2418;z-index:40;animation:up .4s ease}
+.actbtn{position:absolute;bottom:66px;left:50%;transform:translateX(-50%);background:#C87850;color:#fff;border:none;border-radius:30px;padding:13px 44px;font-size:15px;font-weight:700;cursor:pointer;z-index:40;font-family:inherit;white-space:nowrap;animation:up .4s .1s ease both;transition:transform .1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.actbtn:active{transform:translateX(-50%) scale(.96)}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes popin{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+
+/* Choice buttons */
+.choices{position:absolute;bottom:0;left:0;right:0;padding:0 14px 26px;z-index:40;display:flex;flex-direction:column;gap:9px;animation:up .38s ease}
+.ch{background:rgba(255,248,235,.97);border:1.5px solid #C87850;border-radius:26px;padding:14px 18px;cursor:pointer;text-align:left;font-family:inherit;transition:background .12s,transform .1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.ch:active{background:#F5E0CC;transform:scale(.98)}
+.cht{font-size:14px;font-weight:700;color:#3A2418;display:block}
+.chs{font-size:12px;color:#8A6040;margin-top:3px;display:block}
+
+/* Treasure */
+.tov{position:absolute;inset:0;background:rgba(255,248,235,.55);display:flex;align-items:center;justify-content:center;z-index:45;animation:fadein .28s ease}
+.tcard{background:#FEF5E8;border:2.5px solid #EFA832;border-radius:30px;padding:26px 24px 20px;text-align:center;width:244px;animation:popin .38s cubic-bezier(.175,.885,.32,1.275)}
+.trare{background:#F5E050;color:#3A2000;border-radius:10px;padding:4px 12px;font-size:11px;font-weight:800;display:inline-block;margin-bottom:8px}
+.tname{font-size:20px;font-weight:800;color:#3A2418;margin:10px 0 5px}
+.tpts{background:#EFA832;color:#3A2000;border-radius:16px;padding:7px 22px;font-size:15px;font-weight:800;display:inline-block;margin-bottom:18px}
+.tbtn{background:#C87850;color:#fff;border:none;border-radius:22px;padding:13px 0;font-size:15px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* End screen */
+.endwrap{position:absolute;inset:0;background:rgba(255,248,235,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 22px;z-index:50;animation:fadein .5s ease}
+.etitle{font-size:24px;font-weight:800;color:#3A2418;margin-bottom:4px}
+.esub{font-size:14px;color:#6A5030;margin-bottom:20px}
+.stats{display:flex;gap:10px;width:100%;margin-bottom:16px}
+.stat{background:#fff;border-radius:18px;padding:13px 0;text-align:center;flex:1;border:.5px solid #EAD8B8}
+.snum{font-size:26px;font-weight:800;color:#C87850}
+.slbl{font-size:11px;color:#8A6040;margin-top:2px}
+.badges{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+.bdg{background:#FAEBD8;color:#5A3810;border-radius:12px;padding:6px 12px;font-size:12px;font-weight:700}
+.sbtn{background:#C87850;color:#fff;border:none;border-radius:30px;padding:16px 0;font-size:16px;font-weight:800;cursor:pointer;width:100%;font-family:inherit;margin-bottom:10px;touch-action:manipulation}
+.rbtn{background:transparent;border:1.5px solid #C87850;color:#C87850;border-radius:30px;padding:13px 0;font-size:15px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;touch-action:manipulation}
+
+/* Title */
+.titlescreen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:72px;z-index:50}
+.logo{font-size:42px;font-weight:800;color:#3A2418;letter-spacing:-1px;margin-bottom:2px}
+.logo span{color:#C87850}
+.tagline{font-size:15px;color:#6A5030;margin-bottom:28px}
+.startbtn{background:#C87850;color:#fff;border:none;border-radius:30px;padding:15px 52px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform .1s;touch-action:manipulation}
+.startbtn:active{transform:scale(.96)}
+
+/* Dog animations */
+@keyframes legA{0%,100%{transform:rotate(28deg)}50%{transform:rotate(-28deg)}}
+@keyframes legB{0%,100%{transform:rotate(-28deg)}50%{transform:rotate(28deg)}}
+@keyframes tailwag{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(16deg)}}
+@keyframes bodybob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes sniffring{0%{opacity:.82;r:12}100%{opacity:0;r:54}}
+@keyframes breath{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.018)}}
+
+#fl1,#fl2,#bl1,#bl2{transform-origin:50% 0%;transform-box:fill-box}
+#dtail{transform-origin:50% 100%;transform-box:fill-box;animation:tailwag .92s ease-in-out infinite}
+.walking #fl1{animation:legA .42s ease-in-out infinite}
+.walking #fl2{animation:legB .42s ease-in-out infinite}
+.walking #bl1{animation:legB .42s ease-in-out infinite}
+.walking #bl2{animation:legA .42s ease-in-out infinite}
+.walking #dbody{animation:bodybob .42s ease-in-out infinite}
+.sr1,.sr2,.sr3{opacity:0}
+.sniffing .sr1{animation:sniffring 1.5s ease-out infinite}
+.sniffing .sr2{animation:sniffring 1.5s ease-out .52s infinite}
+.sniffing .sr3{animation:sniffring 1.5s ease-out 1.04s infinite}
+#sitdog{animation:breath 3.2s ease-in-out infinite;transform-origin:50% 100%;transform-box:fill-box}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- Shared filters -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="wc" x="-18%" y="-18%" width="136%" height="136%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wcbg" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="4" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="cloudf" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- World scene SVG -->
+<svg id="world" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <rect x="-60" width="1520" height="844" fill="#FEF5E8"/>
+  <rect x="-60" y="200" width="1520" height="180" fill="#F9ECD4" opacity="0.4"/>
+  <circle cx="1258" cy="58" r="96" fill="#F9C86A" opacity="0.18"/>
+  <!-- Clouds -->
+  <ellipse cx="112" cy="86" rx="70" ry="24" fill="#FFF8F0" opacity="0.84" filter="url(#cloudf)"/>
+  <ellipse cx="160" cy="71" rx="46" ry="19" fill="#FFF8F0" opacity="0.76" filter="url(#cloudf)"/>
+  <ellipse cx="476" cy="80" rx="64" ry="22" fill="#FFF8F0" opacity="0.8" filter="url(#cloudf)"/>
+  <ellipse cx="744" cy="90" rx="58" ry="20" fill="#FFF8F0" opacity="0.74" filter="url(#cloudf)"/>
+  <ellipse cx="1046" cy="74" rx="72" ry="24" fill="#FFF8F0" opacity="0.7" filter="url(#cloudf)"/>
+  <ellipse cx="1316" cy="90" rx="54" ry="20" fill="#FFF8F0" opacity="0.68" filter="url(#cloudf)"/>
+  <!-- Far mountains -->
+  <polygon filter="url(#wcbg)" points="-60,320 80,242 176,264 296,220 434,242 574,204 714,224 854,198 994,216 1134,194 1264,210 1396,196 1460,204 1460,485 -60,485" fill="#D0C0D8"/>
+  <!-- Tre Cime -->
+  <polygon filter="url(#wcbg)" points="628,427 644,306 660,427" fill="#B8A8C4"/>
+  <polygon filter="url(#wcbg)" points="656,427 674,280 692,427" fill="#B0A0BC"/>
+  <polygon filter="url(#wcbg)" points="686,427 703,296 720,427" fill="#B8A8C4"/>
+  <!-- Mid mountains -->
+  <polygon filter="url(#wcbg)" points="-60,376 96,334 256,352 434,320 614,334 794,312 974,326 1154,306 1334,320 1460,312 1460,525 -60,525" fill="#A898B4"/>
+  <!-- Foothills -->
+  <polygon filter="url(#wcbg)" points="-60,456 146,414 346,430 554,410 754,422 954,404 1154,416 1354,406 1460,412 1460,602 -60,602" fill="#9AB888"/>
+  <!-- Ghibli puff trees -->
+  <g filter="url(#wc)"><rect x="497" y="554" width="14" height="42" rx="6" fill="#4A6848"/><circle cx="504" cy="526" r="38" fill="#5A8858"/><circle cx="490" cy="540" r="26" fill="#4A7848" opacity="0.7"/><circle cx="520" cy="534" r="28" fill="#6A9860" opacity="0.65"/></g>
+  <g filter="url(#wc)"><rect x="571" y="550" width="16" height="46" rx="7" fill="#4A6848"/><circle cx="579" cy="518" r="42" fill="#628A5A"/><circle cx="561" cy="535" r="30" fill="#4A7848" opacity="0.65"/><circle cx="597" cy="530" r="32" fill="#72A868" opacity="0.6"/></g>
+  <g filter="url(#wc)"><rect x="651" y="554" width="14" height="42" rx="6" fill="#4A6848"/><circle cx="658" cy="526" r="36" fill="#5A8858"/><circle cx="643" cy="540" r="25" fill="#4A7848" opacity="0.7"/><circle cx="671" cy="534" r="27" fill="#6A9860" opacity="0.62"/></g>
+  <g filter="url(#wc)"><rect x="727" y="548" width="16" height="48" rx="7" fill="#3E5C3E"/><circle cx="735" cy="514" r="44" fill="#527E4A"/><circle cx="717" cy="531" r="32" fill="#426A3A" opacity="0.68"/><circle cx="754" cy="527" r="34" fill="#62924A" opacity="0.6"/></g>
+  <g filter="url(#wc)"><rect x="807" y="552" width="15" height="44" rx="6" fill="#4A6848"/><circle cx="814" cy="522" r="40" fill="#5A8858"/><circle cx="797" cy="537" r="28" fill="#4A7848" opacity="0.66"/><circle cx="831" cy="532" r="30" fill="#6A9860" opacity="0.62"/></g>
+  <g filter="url(#wc)"><rect x="877" y="556" width="13" height="40" rx="6" fill="#4A6848"/><circle cx="883" cy="528" r="34" fill="#5A8858"/><circle cx="869" cy="540" r="24" fill="#4A7848" opacity="0.68"/><circle cx="897" cy="536" r="26" fill="#6A9860" opacity="0.6"/></g>
+  <g filter="url(#wc)"><rect x="943" y="552" width="16" height="44" rx="7" fill="#3E5C3E"/><circle cx="951" cy="520" r="42" fill="#527E4A"/><circle cx="933" cy="535" r="30" fill="#426A3A" opacity="0.65"/><circle cx="969" cy="530" r="32" fill="#62924A" opacity="0.58"/></g>
+  <!-- Ground -->
+  <rect x="-60" y="574" width="1520" height="280" fill="#B4D478"/>
+  <rect x="-60" y="574" width="1520" height="38" fill="#C4DC88" opacity="0.5"/>
+  <!-- Trail -->
+  <path d="M-60,652 Q200,628 500,640 Q800,652 1100,632 Q1292,622 1460,636" fill="none" stroke="#C8DC90" stroke-width="28" opacity="0.4" stroke-linecap="round"/>
+  <!-- Flowers -->
+  <ellipse cx="80" cy="596" rx="9" ry="7" fill="#F4E070" opacity="0.9"/>
+  <ellipse cx="127" cy="612" rx="9" ry="7" fill="#F4C0D4" opacity="0.9"/>
+  <ellipse cx="174" cy="588" rx="9" ry="7" fill="#F4E070" opacity="0.85"/>
+  <ellipse cx="237" cy="602" rx="9" ry="7" fill="#C8D4F0" opacity="0.9"/>
+  <ellipse cx="290" cy="584" rx="9" ry="7" fill="#F4C0D4" opacity="0.85"/>
+  <ellipse cx="346" cy="598" rx="9" ry="7" fill="#F4E070" opacity="0.9"/>
+  <ellipse cx="414" cy="588" rx="9" ry="7" fill="#C8D4F0" opacity="0.85"/>
+  <ellipse cx="464" cy="606" rx="9" ry="7" fill="#F4E070" opacity="0.88"/>
+  <!-- Forest light -->
+  <ellipse cx="584" cy="646" rx="42" ry="14" fill="#D4E898" opacity="0.48"/>
+  <ellipse cx="726" cy="663" rx="36" ry="12" fill="#D4E898" opacity="0.42"/>
+  <ellipse cx="874" cy="648" rx="30" ry="11" fill="#D4E898" opacity="0.44"/>
+  <!-- Rocky -->
+  <ellipse cx="1002" cy="626" rx="56" ry="16" fill="#B0A090" opacity="0.28"/>
+  <ellipse cx="1152" cy="612" rx="48" ry="14" fill="#B0A090" opacity="0.24"/>
+  <ellipse cx="1304" cy="622" rx="60" ry="16" fill="#B0A090" opacity="0.22"/>
+  <!-- Treasure glows -->
+  <circle id="tg1" cx="340" cy="632" r="18" fill="#EFA832" opacity="0"/>
+  <circle id="tg2" cx="1070" cy="624" r="18" fill="#EFA832" opacity="0"/>
+  <circle id="tg3" cx="1332" cy="618" r="22" fill="#F5E060" opacity="0"/>
+
+  <!-- ═══ WATERCOLOUR DOG ═══ -->
+  <g id="dogwrap">
+    <circle class="sr1" cx="140" cy="20" r="12" fill="none" stroke="#B8E4DC" stroke-width="2.5"/>
+    <circle class="sr2" cx="140" cy="20" r="12" fill="none" stroke="#B8E4DC" stroke-width="2"/>
+    <circle class="sr3" cx="140" cy="20" r="12" fill="none" stroke="#B8E4DC" stroke-width="1.5"/>
+    <g id="dbody">
+      <!-- Shadow -->
+      <ellipse cx="65" cy="80" rx="60" ry="10" fill="#1A3818" opacity="0.13"/>
+      <!-- Tail -->
+      <g id="dtail">
+        <path d="M6,46 C-15,28 -17,9 -7,-5" fill="none" stroke="#C4A082" stroke-width="13" stroke-linecap="round" opacity="0.9"/>
+        <path d="M6,46 C-15,28 -17,9 -7,-5" fill="none" stroke="#D4B494" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+      </g>
+      <!-- Back legs -->
+      <g id="bl1"><rect x="16" y="54" width="16" height="32" rx="8" fill="#D8C4A8"/></g>
+      <g id="bl2"><rect x="34" y="54" width="16" height="32" rx="8" fill="#D8C4A8"/></g>
+      <!-- Brown body patch -->
+      <ellipse cx="50" cy="46" rx="30" ry="24" fill="#C4A082" opacity="0.62" filter="url(#wc)"/>
+      <ellipse cx="42" cy="52" rx="19" ry="17" fill="#B89070" opacity="0.34" filter="url(#wc)"/>
+      <!-- Main body -->
+      <ellipse cx="66" cy="40" rx="58" ry="30" fill="#F5EDD8" filter="url(#wc)"/>
+      <ellipse cx="68" cy="38" rx="47" ry="22" fill="#FAF3E8" opacity="0.55"/>
+      <!-- Front legs -->
+      <g id="fl1"><rect x="90" y="54" width="16" height="32" rx="8" fill="#D8C4A8"/></g>
+      <g id="fl2"><rect x="109" y="54" width="16" height="32" rx="8" fill="#D8C4A8"/></g>
+      <!-- Neck -->
+      <ellipse cx="112" cy="28" rx="23" ry="19" fill="#F5EDD8" filter="url(#wc)"/>
+      <!-- Head — big and round -->
+      <circle cx="120" cy="16" r="34" fill="#F5EDD8" filter="url(#wc)"/>
+      <circle cx="122" cy="18" r="25" fill="#FAF3E8" opacity="0.45"/>
+      <!-- Brown ear -->
+      <ellipse cx="107" cy="1" rx="15" ry="23" fill="#C4A082" filter="url(#wc)" transform="rotate(-15 107 1)"/>
+      <ellipse cx="107" cy="1" rx="9" ry="15" fill="#B89070" opacity="0.48" transform="rotate(-15 107 1)"/>
+      <!-- Eye -->
+      <circle cx="128" cy="12" r="8" fill="#2E1A10"/>
+      <circle cx="131" cy="9" r="3.4" fill="#fff" opacity="0.92"/>
+      <!-- Snout -->
+      <ellipse cx="142" cy="20" rx="13" ry="10" fill="#F0E4CE" opacity="0.6"/>
+      <!-- Nose — big and dark, key feature -->
+      <ellipse cx="148" cy="20" rx="10" ry="7.5" fill="#2E1A10"/>
+      <ellipse cx="144" cy="16" rx="4" ry="3" fill="#fff" opacity="0.5"/>
+      <!-- Mouth -->
+      <path d="M142,27 Q146,32 151,27" fill="none" stroke="#2E1A10" stroke-width="1.9" stroke-linecap="round"/>
+      <!-- Freckles -->
+      <circle cx="126" cy="24" r="2.2" fill="#8A6040" opacity="0.5"/>
+      <circle cx="134" cy="26" r="1.9" fill="#8A6040" opacity="0.44"/>
+      <circle cx="136" cy="21" r="1.6" fill="#8A6040" opacity="0.38"/>
+    </g>
+  </g>
+</svg>
+
+<!-- TAP ZONE — dedicated interaction layer, z-index 6 -->
+<div id="tapzone"></div>
+
+<!-- HUD -->
+<div class="hud" id="hud" style="display:none">
+  <div class="loc">Tre Cime &middot; Dolomites</div>
+  <div class="hudright">
+    <div class="pts" id="pts">0 pts</div>
+    <button class="musicbtn" id="musicbtn" onclick="toggleMusic()" aria-label="Toggle music">
+      <svg viewBox="0 0 20 20" fill="none" stroke="#6A5030" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 16V5l10-2v11"/><circle cx="5" cy="16" r="2.2"/><circle cx="15" cy="14" r="2.2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="pdots" id="pdots" style="display:none">
+  <div class="pd" id="pd0"></div><div class="pd" id="pd1"></div>
+  <div class="pd" id="pd2"></div><div class="pd" id="pd3"></div>
+</div>
+<div class="moodwrap" id="moodwrap" style="display:none">
+  <svg width="13" height="13" viewBox="0 0 14 14">
+    <path d="M7,12C7,12,1,8,1,4.5C1,2.5,2.5,1,4.5,2C5.5,2.5,6.5,3,7,4C7.5,3,8.5,2.5,9.5,2C11.5,1,13,2.5,13,4.5C13,8,7,12,7,12Z" fill="#E87860"/>
+  </svg>
+  <div class="moodbg"><div class="moodfill" id="moodfill" style="height:24px"></div></div>
+</div>
+<div class="walkhint" id="walkhint">Tap anywhere &mdash; Biscuit will walk there</div>
+
+<!-- Title screen with sitting watercolour dog -->
+<div class="titlescreen" id="titlescreen">
+  <svg id="sitdog" width="196" height="254" viewBox="0 0 160 208" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:6px">
+    <path d="M76,19 L74,8 M80,17 L80,5 M84,19 L86,9" stroke="#8A6040" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <ellipse cx="42" cy="62" rx="20" ry="30" fill="#C4A082" filter="url(#wc)" transform="rotate(-14 42 62)"/>
+    <ellipse cx="42" cy="64" rx="12" ry="20" fill="#B08060" opacity="0.5" filter="url(#wc)" transform="rotate(-14 42 64)"/>
+    <ellipse cx="118" cy="60" rx="20" ry="28" fill="#C4A082" filter="url(#wc)" transform="rotate(12 118 60)"/>
+    <ellipse cx="118" cy="62" rx="12" ry="18" fill="#B08060" opacity="0.5" filter="url(#wc)" transform="rotate(12 118 62)"/>
+    <ellipse cx="80" cy="164" rx="54" ry="44" fill="#F5EDD8" filter="url(#wc)"/>
+    <ellipse cx="98" cy="164" rx="30" ry="32" fill="#C4A082" opacity="0.62" filter="url(#wc)"/>
+    <ellipse cx="96" cy="170" rx="18" ry="22" fill="#B08060" opacity="0.35" filter="url(#wc)"/>
+    <ellipse cx="80" cy="124" rx="30" ry="22" fill="#F5EDD8"/>
+    <circle cx="80" cy="80" r="54" fill="#F5EDD8" filter="url(#wc)"/>
+    <circle cx="82" cy="82" r="42" fill="#FAF3E8" opacity="0.5"/>
+    <circle cx="58" cy="62" r="18" fill="#FFFAF2" opacity="0.4" filter="url(#wc)"/>
+    <ellipse cx="52" cy="200" rx="24" ry="13" fill="#EAD8C0" filter="url(#wc)"/>
+    <ellipse cx="108" cy="200" rx="24" ry="13" fill="#EAD8C0" filter="url(#wc)"/>
+    <path d="M40,200 Q52,208 64,200" fill="none" stroke="#C4A082" stroke-width="1.5" opacity="0.5"/>
+    <path d="M96,200 Q108,208 120,200" fill="none" stroke="#C4A082" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="56" cy="72" r="8.5" fill="#2E1A10"/>
+    <circle cx="59" cy="68" r="3.5" fill="#fff" opacity="0.92"/>
+    <circle cx="104" cy="72" r="8.5" fill="#2E1A10"/>
+    <circle cx="107" cy="68" r="3.5" fill="#fff" opacity="0.92"/>
+    <ellipse cx="80" cy="90" rx="26" ry="20" fill="#F0E4CE" opacity="0.45"/>
+    <ellipse cx="80" cy="94" rx="22" ry="17" fill="#2E1A10"/>
+    <ellipse cx="72" cy="88" rx="7" ry="5" fill="#fff" opacity="0.48"/>
+    <circle cx="55" cy="106" r="3" fill="#8A6040" opacity="0.65"/>
+    <circle cx="64" cy="111" r="2.5" fill="#8A6040" opacity="0.55"/>
+    <circle cx="96" cy="111" r="2.5" fill="#8A6040" opacity="0.55"/>
+    <circle cx="105" cy="106" r="3" fill="#8A6040" opacity="0.65"/>
+    <path d="M62,114 Q80,128 98,114" fill="none" stroke="#2E1A10" stroke-width="2.8" stroke-linecap="round"/>
+    <ellipse cx="80" cy="126" rx="9" ry="6" fill="#E87878" opacity="0.68"/>
+  </svg>
+  <div class="logo">Wander<span>Paws</span></div>
+  <div class="tagline">A cozy walk with Biscuit</div>
+  <button class="startbtn" id="startbtn">Begin the adventure</button>
+</div>
+
+<div id="ov"></div>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────
+var VW=390, VH=844, WORLD=1400, GY=655, DOG_W=158, CAM_ANCHOR=132;
+var dogX=110, dogTarget=110, faceR=true;
+var walking=false, sniffing=false, paused=false, started=false;
+var pts=0, mood=35, found=0, prog=0, myChoice=null, glowT=0;
+
+var TRIGS=[
+  {x:318, type:'sniff', done:false, item:{n:'Tennis ball',p:15,ico:'ball'}},
+  {x:638, type:'choice', done:false},
+  {x:1068, type:'sniff', done:false, item:{n:'Golden bone',p:28,ico:'bone',rare:true}},
+  {x:1318, type:'summit', done:false}
+];
+
+var world=document.getElementById('world');
+var dogwrap=document.getElementById('dogwrap');
+var dbody=document.getElementById('dbody');
+var ov=document.getElementById('ov');
+var appEl=document.getElementById('app');
+var ptsEl=document.getElementById('pts');
+var moodfill=document.getElementById('moodfill');
+
+// ── Camera ────────────────────────────────────────────────
+function camX(){ return Math.max(0, Math.min(WORLD-VW, dogX-CAM_ANCHOR)); }
+
+function updateView(){
+  var cx=camX();
+  world.setAttribute('viewBox', cx+' 0 '+VW+' '+VH);
+  var by=GY-86;
+  dogwrap.setAttribute('transform',
+    faceR ? 'translate('+dogX+','+by+')' : 'translate('+(dogX+DOG_W)+','+by+') scale(-1,1)');
+}
+
+function updateHUD(){
+  ptsEl.textContent=pts+' pts';
+  moodfill.style.height=Math.min(66,Math.round(mood*.66))+'px';
+  for(var i=0;i<4;i++) document.getElementById('pd'+i).className='pd'+(i<prog?' on':'');
+}
+
+function bumpPts(){
+  ptsEl.classList.add('bump');
+  setTimeout(function(){ ptsEl.classList.remove('bump'); }, 340);
+}
+
+// ── Tap ripple feedback ───────────────────────────────────
+function showRipple(cx, cy){
+  var rect=appEl.getBoundingClientRect();
+  var d=document.createElement('div');
+  d.className='ripple';
+  d.style.left=(cx-rect.left)+'px';
+  d.style.top=(cy-rect.top)+'px';
+  appEl.appendChild(d);
+  setTimeout(function(){ if(d.parentNode) d.parentNode.removeChild(d); }, 520);
+}
+
+// ── Glows + sniff detection ───────────────────────────────
+function updateGlows(){
+  glowT+=0.042;
+  var p=0.14+0.08*Math.sin(glowT), r=16+5*Math.sin(glowT);
+  function gl(id,wx,active){
+    var el=document.getElementById(id);
+    if(!active){ el.setAttribute('opacity','0'); return; }
+    el.setAttribute('opacity', Math.abs(dogX-wx)<295?p:'0');
+    el.setAttribute('r', r+(id==='tg3'?4:0));
+  }
+  gl('tg1',340,!TRIGS[0].done);
+  gl('tg2',1070,!TRIGS[2].done);
+  gl('tg3',1332,!TRIGS[3].done);
+  var ns=TRIGS.some(function(t){ return !t.done&&t.type==='sniff'&&Math.abs(dogX-t.x)<215; });
+  if(ns!==sniffing){ sniffing=ns; dogwrap.classList.toggle('sniffing',sniffing); }
+}
+
+// ── Triggers ──────────────────────────────────────────────
+function checkTriggers(){
+  TRIGS.forEach(function(t){
+    if(!t.done && dogX>=t.x-10){
+      t.done=true;
+      if(t.type==='sniff') showSniff(t.item);
+      else if(t.type==='choice'){ paused=true; dogTarget=dogX; showChoice(); }
+      else if(t.type==='summit'){ paused=true; dogTarget=dogX; setTimeout(showEnd,700); }
+    }
+  });
+}
+
+// ── UI overlays ───────────────────────────────────────────
+function showSniff(item){
+  prog=Math.max(prog,1);
+  var txt=item.rare
+    ?'The pale towers blaze gold. Biscuit presses her nose to the summit earth \u2014 something rare is buried here.'
+    :'Biscuit freezes. Her nose twitches. She circles once and stares hard at the grass near the old signpost.';
+  ov.innerHTML='<div class="bubble">'+txt+'</div>'+
+    '<button class="actbtn" onclick="doSniff(\''+item.n+'\','+item.p+','+(item.rare?'true':'false')+',\''+item.ico+'\')">Tap to sniff!</button>';
+}
+
+function doSniff(name,p,rare,ico){ found++; ov.innerHTML=buildT(name,p,rare,ico); }
+
+function buildT(name,p,rare,ico){
+  var ic={
+    ball:'<svg width="66" height="66" viewBox="0 0 66 66"><circle cx="33" cy="33" r="28" fill="#E0F0F8"/><circle cx="33" cy="33" r="21" fill="#84C0D8"/><circle cx="33" cy="33" r="13" fill="#54A8CC"/><circle cx="33" cy="33" r="6" fill="#3480A8"/></svg>',
+    bone:'<svg width="66" height="66" viewBox="0 0 66 66"><rect x="22" y="25" width="22" height="16" rx="4" fill="#F2DEC0" stroke="#D8C098" stroke-width="1"/><circle cx="19" cy="24" r="9" fill="#F2DEC0" stroke="#D8C098" stroke-width="1"/><circle cx="47" cy="24" r="9" fill="#F2DEC0" stroke="#D8C098" stroke-width="1"/><circle cx="19" cy="42" r="9" fill="#F2DEC0" stroke="#D8C098" stroke-width="1"/><circle cx="47" cy="42" r="9" fill="#F2DEC0" stroke="#D8C098" stroke-width="1"/></svg>'
+  }[ico]||'<svg width="66" height="66" viewBox="0 0 66 66"><circle cx="33" cy="33" r="28" fill="#FEF8E8"/><circle cx="33" cy="33" r="21" fill="#F2E050"/><circle cx="33" cy="33" r="13" fill="#ECA830"/><circle cx="33" cy="33" r="6" fill="#D89020"/></svg>';
+  return '<div class="tov"><div class="tcard">'+
+    (rare?'<div class="trare">RARE FIND</div>':'')+ic+
+    '<div class="tname">'+name+'!</div>'+
+    '<div class="tpts">+'+p+' pts</div>'+
+    '<button class="tbtn" onclick="closeT('+p+')">Collect!</button></div></div>';
+}
+
+function closeT(p){
+  pts+=p; mood=Math.min(100,mood+22); ov.innerHTML=''; bumpPts();
+  if(found===1) prog=Math.max(prog,2);
+  if(found>=2) prog=Math.max(prog,3);
+  updateHUD();
+}
+
+function showChoice(){
+  prog=Math.max(prog,2);
+  ov.innerHTML='<div class="bubble">The trail forks. Biscuit looks back at you, tail wagging slowly \u2014 waiting.</div>'+
+    '<div class="choices">'+
+    '<button class="ch" onclick="pick(\'forest\')"><span class="cht">Head into the pine forest \u2192</span><span class="chs">Cool shadows, the smell of resin, round puff trees</span></button>'+
+    '<button class="ch" onclick="pick(\'flowers\')"><span class="cht">Stay among the wildflowers</span><span class="chs">A quiet moment \u2014 Biscuit loves it here</span></button>'+
+    '</div>';
+}
+
+function pick(c){
+  myChoice=c; mood=Math.min(100,mood+12);
+  ov.innerHTML='<div class="bubble">'+
+    (c==='forest'
+      ?'The pines swallow you both. Dappled golden light. The smell of resin. Biscuit sniffs every root in delight.'
+      :'Biscuit rolls in chamomile, legs in the air. Completely unashamed. Completely happy.')+
+    '</div><button class="actbtn" onclick="resume()">Keep going \u2192</button>';
+}
+
+function resume(){ ov.innerHTML=''; paused=false; }
+
+function showEnd(){
+  var b3=myChoice==='forest'?'Forest explorer':myChoice?'Wildflower dreamer':'Trail wanderer';
+  ov.innerHTML='<div class="endwrap">'+
+    '<div class="etitle">Biscuit\u2019s adventure</div>'+
+    '<div class="esub">Tre Cime trail \u00b7 golden hour</div>'+
+    '<div class="stats">'+
+      '<div class="stat"><div class="snum">'+pts+'</div><div class="slbl">points</div></div>'+
+      '<div class="stat"><div class="snum">'+found+'</div><div class="slbl">treasures</div></div>'+
+      '<div class="stat"><div class="snum">'+Math.round(mood)+'%</div><div class="slbl">mood</div></div>'+
+    '</div>'+
+    '<div class="badges"><span class="bdg">Tre Cime hiker</span>'+(found>0?'<span class="bdg">Treasure hunter</span>':'')+
+    '<span class="bdg">'+b3+'</span></div>'+
+    '<button class="sbtn" onclick="doShare()">Share with friends</button>'+
+    '<button class="rbtn" onclick="doRestart()">Play again</button>'+
+    '</div>';
+  prog=4; updateHUD();
+}
+
+// ── Input — tapzone (reliable on all devices) ─────────────
+function handlePt(cx, cy){
+  if(!started || paused) return;
+  var rect=appEl.getBoundingClientRect();
+  // Convert screen x → 390px app space → world space
+  var appX=(cx-rect.left) * (VW/rect.width);
+  dogTarget=Math.max(58, Math.min(WORLD-80, appX+camX()));
+  showRipple(cx, cy);
+}
+
+var tapzone=document.getElementById('tapzone');
+var drag=false;
+
+tapzone.addEventListener('click', function(e){
+  handlePt(e.clientX, e.clientY);
+  e.stopPropagation();
+});
+
+tapzone.addEventListener('touchstart', function(e){
+  drag=true;
+  handlePt(e.touches[0].clientX, e.touches[0].clientY);
+}, {passive:true});
+
+tapzone.addEventListener('touchmove', function(e){
+  if(drag) handlePt(e.touches[0].clientX, e.touches[0].clientY);
+  e.preventDefault();
+}, {passive:false});
+
+tapzone.addEventListener('touchend', function(){ drag=false; });
+
+// Disable tapzone when overlay content is present (let overlay buttons work normally)
+var ovObserver=new MutationObserver(function(){
+  tapzone.style.pointerEvents=ov.innerHTML.trim()==='' ? 'all' : 'none';
+});
+ovObserver.observe(ov, {childList:true, subtree:true, characterData:true});
+
+// ── RAF game loop ─────────────────────────────────────────
+function loop(){
+  if(started && !paused){
+    var dx=dogTarget-dogX;
+    if(Math.abs(dx)>1.2){
+      dogX+=Math.min(Math.abs(dx),3.5)*Math.sign(dx);
+      faceR=dx>0;
+      if(!walking){ walking=true; dbody.classList.add('walking'); }
+    } else {
+      dogX=dogTarget;
+      if(walking){ walking=false; dbody.classList.remove('walking'); }
+    }
+    updateView(); updateGlows(); checkTriggers(); updateHUD();
+  }
+  requestAnimationFrame(loop);
+}
+
+// ── Start / restart ───────────────────────────────────────
+document.getElementById('startbtn').addEventListener('click', function(){
+  document.getElementById('titlescreen').style.display='none';
+  document.getElementById('hud').style.display='flex';
+  document.getElementById('pdots').style.display='flex';
+  document.getElementById('moodwrap').style.display='flex';
+  var wh=document.getElementById('walkhint');
+  wh.classList.add('show');
+  setTimeout(function(){ wh.classList.remove('show'); }, 5000);
+  started=true; paused=false; dogTarget=700;
+  updateView(); updateHUD();
+});
+
+function doRestart(){
+  dogX=110; dogTarget=110; faceR=true; walking=false; sniffing=false; paused=false;
+  pts=0; mood=35; found=0; prog=0; myChoice=null;
+  TRIGS.forEach(function(t){ t.done=false; });
+  dbody.classList.remove('walking'); dogwrap.classList.remove('sniffing');
+  ov.innerHTML=''; dogTarget=700;
+  var wh=document.getElementById('walkhint');
+  wh.classList.add('show');
+  setTimeout(function(){ wh.classList.remove('show'); }, 5000);
+  updateView(); updateHUD();
+}
+
+async function doShare(){
+  var url=window.location.href;
+  var txt='Biscuit found '+pts+' pts on the Dolomites trail! Try WanderPaws \u2014 a cozy dog adventure.';
+  try{
+    if(navigator.share) await navigator.share({title:'WanderPaws',text:txt,url:url});
+    else { await navigator.clipboard.writeText(url); alert('Link copied! Share with friends.'); }
+  } catch(e){
+    try { await navigator.clipboard.writeText(url); alert('Copied!'); } catch(e2){ alert(url); }
+  }
+}
+
+// ── Music — Web Audio ambient ─────────────────────────────
+var actx=null, mGain=null, musicOn=false, noteTimer=null, noteIdx=0;
+var MELODY=[261.63,329.63,392,523.25,392,329.63,261.63,196,246.94,329.63];
+
+function ensureAudio(){
+  if(actx) return;
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  mGain=actx.createGain(); mGain.gain.value=0; mGain.connect(actx.destination);
+  [[130.81,.046],[196,.036],[261.63,.028],[392,.018]].forEach(function(p){
+    var o=actx.createOscillator(), g=actx.createGain();
+    o.type='sine'; o.frequency.value=p[0]; g.gain.value=p[1];
+    o.connect(g); g.connect(mGain); o.start();
+  });
+}
+
+function schedNote(){
+  noteTimer=setTimeout(function(){
+    if(!musicOn) return;
+    var freq=MELODY[noteIdx%MELODY.length]; noteIdx++;
+    if(Math.random()>.7) freq*=2;
+    var o=actx.createOscillator(), env=actx.createGain();
+    o.type='sine'; o.frequency.value=freq;
+    env.gain.setValueAtTime(0,actx.currentTime);
+    env.gain.linearRampToValueAtTime(.17,actx.currentTime+.014);
+    env.gain.exponentialRampToValueAtTime(.001,actx.currentTime+2.8);
+    o.connect(env); env.connect(mGain); o.start(); o.stop(actx.currentTime+3);
+    schedNote();
+  }, 1400+Math.random()*3200);
+}
+
+function toggleMusic(){
+  ensureAudio();
+  if(actx.state==='suspended') actx.resume();
+  musicOn=!musicOn;
+  mGain.gain.cancelScheduledValues(actx.currentTime);
+  mGain.gain.setValueAtTime(mGain.gain.value, actx.currentTime);
+  mGain.gain.linearRampToValueAtTime(musicOn?.65:0, actx.currentTime+1.1);
+  if(musicOn) schedNote(); else clearTimeout(noteTimer);
+  document.getElementById('musicbtn').classList.toggle('on',musicOn);
+}
+
+// Init
+updateView();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
