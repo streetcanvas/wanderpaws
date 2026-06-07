@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Biscuit City · Adoption</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{ --ink:#3a2e28; --cream:#fbf4e6; --card:#fff; --gold:#e8b94d; --muted:#8a7c66; --line:#ece2cd; --green:#5fae6e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; background:var(--cream); color:var(--ink); -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:920px; margin:0 auto; padding:22px 16px 60px; }
+  header{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  h1{ font-size:22px; margin:0; }
+  h1 span{ font-weight:400; color:var(--muted); font-size:14px; }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(95,174,110,.18); }
+  button{ font:inherit; font-weight:600; border:2px solid var(--line); background:var(--card); color:var(--ink); border-radius:11px; padding:8px 14px; cursor:pointer; }
+  button:active{ transform:translateY(1px); }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:20px; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 16px 14px; }
+  .stat .n{ font-size:34px; font-weight:800; line-height:1; }
+  .stat .l{ font-size:12.5px; color:var(--muted); margin-top:8px; font-weight:600; }
+  .stat.hl{ background:linear-gradient(160deg,#fff7e6,#ffe9b8); border-color:var(--gold); }
+  .panel{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:18px; }
+  .panel h2{ font-size:15px; margin:0 0 12px; }
+  canvas{ width:100%; height:200px; display:block; }
+  .region{ display:flex; align-items:center; gap:10px; margin-bottom:9px; font-size:14px; }
+  .region .name{ width:42%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .region .track{ flex:1; height:10px; background:#f1e8d4; border-radius:6px; overflow:hidden; }
+  .region .fill{ height:100%; background:linear-gradient(90deg,var(--gold),#ffd98a); border-radius:6px; }
+  .region .v{ width:42px; text-align:right; font-weight:700; color:var(--muted); }
+  .muted{ color:var(--muted); font-size:13px; }
+  .err{ background:#fbe1d8; border:1px solid #e0a08c; color:#8a3b22; padding:10px 12px; border-radius:11px; font-size:13px; margin-bottom:14px; }
+  footer{ color:var(--muted); font-size:12px; text-align:center; margin-top:24px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🐾 Biscuit City <span>· adoption</span></h1>
+    <div class="bar"><span class="dot"></span><span class="muted" id="updated">loading…</span><button id="refresh">Refresh</button></div>
+  </header>
+
+  <div id="error"></div>
+
+  <div class="grid" id="stats"></div>
+
+  <div class="panel">
+    <h2>Active players · last 24 hours (hourly)</h2>
+    <canvas id="chart" width="880" height="200"></canvas>
+  </div>
+
+  <div class="panel">
+    <h2>Top regions · last 24 hours</h2>
+    <div id="regions"><div class="muted">loading…</div></div>
+  </div>
+
+  <footer>
+    Players are counted anonymously by a random per-device id; “region” is the browser timezone.<br>
+    Auto-refreshes every 20s. Numbers come from aggregate functions only — no individual rows are exposed.
+  </footer>
+</div>
+
+<script>
+  const SUPABASE_URL='https://dnovlykabymcbtxcfdvb.supabase.co';
+  const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRub3ZseWthYnltY2J0eGNmZHZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NzcyNDgsImV4cCI6MjA5NjA1MzI0OH0.0wJG6WgWR80j_FcU2YzYLsv4bFJkjUIdodFewlzM5HM';
+  const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {auth:{persistSession:false}});
+
+  const $ = id => document.getElementById(id);
+  const showErr = msg => { $('error').innerHTML = msg ? '<div class="err">'+msg+'</div>' : ''; };
+
+  function statCard(n, label, hl){ return '<div class="stat'+(hl?' hl':'')+'"><div class="n">'+n+'</div><div class="l">'+label+'</div></div>'; }
+
+  async function loadStats(){
+    const { data, error } = await supa.rpc('adoption_summary');
+    if(error){ showErr('adoption_summary: '+error.message); return; }
+    const byWin = {}; (data||[]).forEach(r => byWin[r.period] = r);
+    const w30 = byWin['30 min']||{}, w24 = byWin['24 hours']||{}, w7 = byWin['7 days']||{};
+    $('stats').innerHTML =
+      statCard(w30.active_players ?? 0, 'Playing now (30 min)', true) +
+      statCard(w24.active_players ?? 0, 'Active · 24 hours') +
+      statCard(w7.active_players ?? 0, 'Active · 7 days') +
+      statCard(w24.new_players ?? 0, 'New players · 24h') +
+      statCard(w7.sessions ?? 0, 'Sessions · 7 days');
+  }
+
+  async function loadChart(){
+    const { data, error } = await supa.rpc('players_timeseries', { hours: 24 });
+    if(error){ showErr('players_timeseries: '+error.message); return; }
+    drawChart((data||[]).map(r => ({ t:new Date(r.bucket), v:Number(r.players) })));
+  }
+
+  function drawChart(points){
+    const c = $('chart'), ctx = c.getContext('2d');
+    const W = c.width, H = c.height, pad = 26;
+    ctx.clearRect(0,0,W,H);
+    if(!points.length){ ctx.fillStyle='#8a7c66'; ctx.font='14px system-ui'; ctx.fillText('No activity yet — share the game link to start collecting.', pad, H/2); return; }
+    const max = Math.max(1, ...points.map(p=>p.v));
+    const bw = (W - pad*2) / points.length;
+    ctx.fillStyle = '#8a7c66'; ctx.font = '11px system-ui';
+    [0, Math.ceil(max/2), max].forEach(g => { const y = H-pad - (H-pad*2)*(g/max); ctx.fillText(g, 2, y+3);
+      ctx.strokeStyle='#ece2cd'; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W,y); ctx.stroke(); });
+    points.forEach((p,i) => {
+      const h = (H-pad*2) * (p.v/max), x = pad + i*bw + bw*0.18, y = H-pad - h;
+      ctx.fillStyle = '#e8b94d'; ctx.fillRect(x, y, bw*0.64, h);
+      if(i % Math.ceil(points.length/6 || 1) === 0){ ctx.fillStyle='#8a7c66'; ctx.fillText(p.t.getHours()+':00', x-4, H-8); }
+    });
+  }
+
+  async function loadRegions(){
+    const { data, error } = await supa.rpc('top_regions', { mins: 1440 });
+    if(error){ showErr('top_regions: '+error.message); return; }
+    const rows = data || [];
+    if(!rows.length){ $('regions').innerHTML = '<div class="muted">No players yet.</div>'; return; }
+    const max = Math.max(1, ...rows.map(r=>Number(r.players)));
+    $('regions').innerHTML = rows.map(r => {
+      const v = Number(r.players), pct = (v/max*100).toFixed(0);
+      return '<div class="region"><div class="name">'+(r.region||'unknown')+'</div>'+
+             '<div class="track"><div class="fill" style="width:'+pct+'%"></div></div>'+
+             '<div class="v">'+v+'</div></div>';
+    }).join('');
+  }
+
+  async function refreshAll(){
+    showErr('');
+    try{ await Promise.all([loadStats(), loadChart(), loadRegions()]);
+      $('updated').textContent = 'updated ' + new Date().toLocaleTimeString();
+    }catch(e){ showErr('Could not load: ' + (e.message || e)); }
+  }
+
+  $('refresh').addEventListener('click', refreshAll);
+  refreshAll();
+  setInterval(refreshAll, 20000);
+</script>
+</body>
+</html>
