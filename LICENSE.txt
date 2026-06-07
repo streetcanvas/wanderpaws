@@ -1,0 +1,48 @@
+PROPRIETARY SOFTWARE LICENSE — ALL RIGHTS RESERVED
+
+Copyright (c) 2026 [Your name / studio]. All rights reserved.
+
+"Mochi & Latte: Biscuit City" — including its source code, game design, the
+characters Mochi & Latte, all 3D models, artwork, audio, and related materials
+(the "Software") — is the exclusive property of the copyright holder and is
+protected by copyright and other intellectual-property laws.
+
+LIMITED GRANT
+You are permitted only to access and play the Software as publicly hosted by
+the copyright holder, for personal, non-commercial enjoyment. No other rights
+are granted, expressly or by implication.
+
+PROHIBITED WITHOUT PRIOR WRITTEN PERMISSION
+Except as strictly necessary for your web browser to load and run the Software
+while you play it, you may NOT, in whole or in part:
+  - copy, reproduce, download for reuse, scrape, or store the Software;
+  - modify, adapt, translate, or create derivative works from it;
+  - distribute, publish, mirror, sublicense, sell, rent, lease, or transfer it;
+  - reverse engineer, decompile, or disassemble it, except to the limited
+    extent that applicable law expressly permits despite this prohibition;
+  - remove, obscure, or alter any copyright, trademark, or proprietary notice;
+  - incorporate the Software or any portion of it into any other product,
+    service, dataset, or model.
+
+No license or right in any trademark, trade name, character, or logo is
+granted. All rights not expressly granted are reserved by the copyright holder.
+Unauthorized use may result in civil and/or criminal liability.
+
+NO WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES, OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE SOFTWARE OR
+ITS USE.
+
+Permissions and inquiries: [your-contact@email.com]
+
+-------------------------------------------------------------------------------
+THIRD-PARTY COMPONENTS
+
+The Software loads these independent open-source libraries at runtime via CDN.
+They remain the property of their authors under their own licenses; this
+proprietary license does NOT apply to them, and they may be used by others
+under those licenses:
+
+  three.js                — MIT License — (c) three.js authors
+  @supabase/supabase-js   — MIT License — (c) Supabase Inc.
